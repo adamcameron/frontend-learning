@@ -10,7 +10,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      exclude: ['**/*.d.ts'],
+      exclude: ['**/*.d.ts', '**/*.config.*'],
     },
   },
 })
