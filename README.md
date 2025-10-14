@@ -33,6 +33,15 @@ For me it's `file://wsl.localhost/Ubuntu/home/adam/source/frontend-learning/cove
 docker exec -it frontend-learning-node-1 npx eslint
 ```
 
+## Running Prettier manually
+
+It should run fine as you save any files, but in case you need to run it manually:
+
+```
+docker exec -it frontend-learning-node-1 npx prettier --write [filespec]
+# eg: docker exec -it frontend-learning-node-1 npx prettier --write tests/baseline.test.ts
+```
+
 ## Getting tsc to check the code
 
 ```

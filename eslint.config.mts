@@ -1,12 +1,29 @@
 import js from '@eslint/js'
 import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 
 export default defineConfig([
+  globalIgnores(['dist/', 'node_modules/', 'coverage/', '*.{ts,mts}']),
   {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      tseslint.configs.recommendedTypeChecked,
+      reactHooks.configs['recommended-latest'],
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+  },
+  {
+    files: ['*.config.{ts,mts}', 'vite.config.ts'],
     plugins: { js },
     languageOptions: {
       globals: globals.node,
@@ -26,17 +43,13 @@ export default defineConfig([
       eqeqeq: ['error', 'always'],
     },
   },
-  tseslint.configs.recommendedTypeChecked,
   {
     languageOptions: {
       parserOptions: {
-        projectService: {
-          allowDefaultProject: ["tests/**/*.ts"],
-        },
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },
   },
   eslintConfigPrettier,
-  globalIgnores(['dist/', 'node_modules/', 'coverage/', '*.{ts,mts}']),
 ])
