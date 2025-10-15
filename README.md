@@ -30,7 +30,11 @@ For me it's `file://wsl.localhost/Ubuntu/home/adam/source/frontend-learning/cove
 ## Running ESLint
 
 ```
+# ad-hoc
 docker exec -it frontend-learning-node-1 npx eslint
+
+# using a file watcher:
+ docker exec -it frontend-learning-node-1 npm run lint:watch
 ```
 
 ## Running Prettier manually
@@ -49,10 +53,11 @@ docker exec -it frontend-learning-node-1 npx prettier --write [filespec]
 ## Getting tsc to check the code
 
 ```
-docker exec -it frontend-learning-node-1 npx tsc --noEmit
+# compile all
+docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --noEmit
 
 # and watch for changes
-docker exec -it frontend-learning-node-1 npx tsc --watch --noEmit
+docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --watch --noEmit
 ```
 
 ## Run Vite server
