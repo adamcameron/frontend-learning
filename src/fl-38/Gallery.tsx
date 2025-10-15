@@ -17,9 +17,9 @@ function Profile({ src, alt }: Mugshot) {
 
 export default function Gallery() {
   const profiles: Mugshot[] = [
-    { src: '/public/images/happy.png', alt: 'Happy person' },
-    { src: '/public/images/neutral.png', alt: 'Neutral person' },
-    { src: '/public/images/sad.png', alt: 'Sad person' },
+    { src: '/images/happy.png', alt: 'Happy person' },
+    { src: '/images/neutral.png', alt: 'Neutral person' },
+    { src: '/images/sad.png', alt: 'Sad person' },
   ]
   return (
     <section data-testid="gallery">
