@@ -4,15 +4,7 @@ TypeScript, React etc
 
 ## Building containers
 
-One needs a non-source-controlled secrets file to be in place at `docker/secrets/POSTGRES_PASSWORD.private`.
-It should contain only the password value, eg:
-
-```
-cat docker/secrets/POSTGRES_PASSWORD.private
-123
-```
-
-There's a convenience script at `bin/rebuild.sh` that tears down and rebuilds the containers:
+There's a convenience script at `bin/rebuild.sh` that does this:
 
 ```
 docker compose -f docker/docker-compose.yml down --volumes --remove-orphans
@@ -75,13 +67,3 @@ docker exec -it frontend-learning-node-1 npx vite --host 0.0.0.0
 ```
 
 This will expose the site on `http://localhost:5173/`
-
-## PostgreSQL
-
-Connecting to the DB from the container:
-
-```
-psql --dbname=fl --host=localhost --port=5432 --username=fl_user
-```
-
-No need for pwd using that approach as there's a `~/.pgpass` file in place in the container file system.

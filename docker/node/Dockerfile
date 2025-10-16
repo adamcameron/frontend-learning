@@ -2,7 +2,6 @@ FROM node:24-bullseye
 
 RUN echo "alias ll='ls -alF'" >> ~/.bashrc
 RUN echo "alias cls='clear; printf \"\033[3J\"'" >> ~/.bashrc
-RUN echo "set mouse-=a\nset expandtab\nset shiftwidth=4\nset tabstop=4\n" > ~/.vimrc
 
 RUN ["apt-get", "update"]
 RUN ["apt-get", "install", "-y", "zip", "unzip", "git", "vim"]
