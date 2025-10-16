@@ -1,44 +1,19 @@
 services:
-  node:
-    build:
-      context: ..
-      dockerfile: docker/node/Dockerfile
+    node:
+        build:
+            context: ..
+            dockerfile: docker/node/Dockerfile
 
-    volumes:
-      - ..:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
+        volumes:
+            - ..:/usr/src/app
+            - node_modules:/usr/src/app/node_modules
 
-    ports:
-      - '51204:51204'
-      - '5173:5173'
+        ports:
+            - "51204:51204"
+            - "5173:5173"
 
-    stdin_open: true
-    tty: true
-
-  postgres:
-    build:
-      context: .
-      dockerfile: postgres/Dockerfile
-
-    env_file:
-      - postgres/envVars.public
-
-    ports:
-      - '5432:5432'
-
-    volumes:
-      - postgresData:/var/lib/postgresql/data
-
-    stdin_open: true
-    tty: true
-
-    secrets:
-      - db_password
+        stdin_open: true
+        tty: true
 
 volumes:
-  node_modules:
-  postgresData:
-
-secrets:
-  db_password:
-    file: secrets/POSTGRES_PASSWORD.private
+    node_modules:
