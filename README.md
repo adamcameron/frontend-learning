@@ -5,7 +5,7 @@ TypeScript, React etc
 ## Building containers
 
 One needs a non-source-controlled secrets file to be in place at `docker/secrets/POSTGRES_PASSWORD.private`.
-it should contain only the password value, eg:
+It should contain only the password value, eg:
 
 ```
 cat docker/secrets/POSTGRES_PASSWORD.private
