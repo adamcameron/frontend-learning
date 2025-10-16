@@ -1,0 +1,3 @@
+POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+POSTGRES_DB=fl
+POSTGRES_USER=fl_user
