@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 type Mugshot = { src: string; alt: string }
 
 function Profile({ src, alt }: Mugshot) {
@@ -16,11 +18,28 @@ function Profile({ src, alt }: Mugshot) {
 }
 
 export default function Gallery() {
-  const profiles: Mugshot[] = [
-    { src: '/images/happy.png', alt: 'Happy person' },
-    { src: '/images/neutral.png', alt: 'Neutral person' },
-    { src: '/images/sad.png', alt: 'Sad person' },
-  ]
+  const [profiles, setProfiles] = useState<Mugshot[]>([])
+  useEffect(() => {
+    let ignore = false
+    async function fetchProfiles() {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/profiles`
+      )
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`)
+      }
+      const body: Mugshot[] = (await response.json()) as unknown as Mugshot[]
+      if (!ignore) {
+        setProfiles(body)
+      }
+    }
+    fetchProfiles().catch((e) => {
+      console.error(e)
+    })
+    return () => {
+      ignore = true
+    }
+  }, [])
   return (
     <section data-testid="gallery">
       <h1>Amazing scientists</h1>

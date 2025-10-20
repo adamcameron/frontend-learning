@@ -1,19 +1,25 @@
 services:
-    node:
-        build:
-            context: ..
-            dockerfile: docker/node/Dockerfile
+  node:
+    build:
+      context: ..
+      dockerfile: docker/node/Dockerfile
 
-        volumes:
-            - ..:/usr/src/app
-            - node_modules:/usr/src/app/node_modules
+    volumes:
+      - ..:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
 
-        ports:
-            - "51204:51204"
-            - "5173:5173"
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
 
-        stdin_open: true
-        tty: true
+    ports:
+      - '51204:51204'
+      - '5173:5173'
+
+    env_file:
+      - node/envVars.public
+
+    stdin_open: true
+    tty: true
 
 volumes:
-    node_modules:
+  node_modules:
