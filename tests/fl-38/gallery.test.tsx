@@ -1,24 +1,61 @@
-import { render, screen, within } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { render, screen, waitFor } from '@testing-library/react'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import Gallery from '@/fl-38/Gallery'
 
 describe('Testing Gallery component', () => {
-  it('renders the Gallery component with the correct number of profiles', () => {
+  afterEach(() => {
+    vi.clearAllMocks() // Reset all mocked calls between tests
+  })
+
+  it('renders the Gallery component with the correct number of profiles', async () => {
     render(<Gallery />)
 
-    const gallery = screen.getByTestId('gallery')
-    const profiles = within(gallery).getAllByTestId('profile')
+    let profiles: HTMLElement[] | undefined
+
+    await waitFor(() => {
+      profiles = screen.getAllByTestId('profile')
+      expect(profiles).toBeDefined()
+    })
+
+    if (typeof profiles === 'undefined') {
+      return expect.fail('profiles not found in dom')
+    }
     expect(profiles).toHaveLength(3)
   })
 
-  it('verifies each profile is an img element', () => {
+  it('verifies each profile is an img element', async () => {
     render(<Gallery />)
 
-    const gallery = screen.getByTestId('gallery')
-    const profiles = within(gallery).getAllByTestId('profile')
+    let profiles: HTMLElement[] | undefined
+
+    await waitFor(() => {
+      profiles = screen.getAllByTestId('profile')
+      expect(profiles).toBeDefined()
+    })
+    if (typeof profiles === 'undefined') {
+      return expect.fail('profiles not found in dom')
+    }
 
     profiles.forEach((profile) => {
       expect(profile.tagName).toBe('IMG')
     })
+  })
+
+  it('logs to console if the response is non-200', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: async () => Promise.resolve([]),
+    } as Response)
+
+    const consoleSpy = vi.spyOn(console, 'error')
+    consoleSpy.mockImplementation(() => {})
+
+    render(<Gallery />)
+    await waitFor(() => {
+      expect(screen.getAllByTestId('gallery')).toBeDefined()
+    })
+
+    expect(consoleSpy).toHaveBeenCalledWith(new Error('Response status: 500'))
   })
 })

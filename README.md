@@ -12,6 +12,14 @@ docker compose -f docker/docker-compose.yml build
 docker compose -f docker/docker-compose.yml up --detach
 ```
 
+## Run Vite server
+
+```
+docker exec -it frontend-learning-node-1 npx vite --host 0.0.0.0
+```
+
+This will expose the site on `http://localhost:5173/`
+
 ## Starting test watcher
 
 ```
@@ -59,11 +67,3 @@ docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --n
 # and watch for changes
 docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --watch --noEmit
 ```
-
-## Run Vite server
-
-```
-docker exec -it frontend-learning-node-1 npx vite --host 0.0.0.0
-```
-
-This will expose the site on `http://localhost:5173/`
