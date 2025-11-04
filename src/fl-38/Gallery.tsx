@@ -1,19 +1,17 @@
 import { useEffect, useState } from 'react'
+import './gallery.css'
 
-type Mugshot = { src: string; alt: string }
+type Mugshot = { id: number; src: string; alt: string }
 
-function Profile({ src, alt }: Mugshot) {
+function Profile({ src, alt }: { src: string; alt: string }) {
   return (
-    <>
-      <img
-        src={src}
-        alt={alt}
-        width="150px"
-        className="small-h-gap"
-        data-testid="profile"
-      />
-      &nbsp;
-    </>
+    <img
+      src={src}
+      alt={alt}
+      width="150px"
+      className="small-h-gap"
+      data-testid="profile"
+    />
   )
 }
 
@@ -43,8 +41,8 @@ export default function Gallery() {
   return (
     <section data-testid="gallery">
       <h1>Amazing scientists</h1>
-      {profiles.map((profile: Mugshot, i: number) => (
-        <Profile src={profile.src} alt={profile.alt} key={i} />
+      {profiles.map((mugshot: Mugshot) => (
+        <Profile {...mugshot} key={mugshot.id} />
       ))}
     </section>
   )
