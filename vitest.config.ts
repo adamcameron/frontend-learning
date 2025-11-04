@@ -11,7 +11,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      exclude: ['**/*.d.ts', '**/*.config.*', './tests/setup.ts'],
+      exclude: ['**/*.d.ts', '**/*.config.*', './tests/setup.ts', 'dist'],
     },
     environment: 'jsdom',
     globals: true,
