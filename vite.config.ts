@@ -9,6 +9,22 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         fl38: resolve(__dirname, 'pages/fl-38/index.html'),
+        fl41_profiles_add: resolve(
+          __dirname,
+          'pages/fl-41/profiles/add/index.html'
+        ),
+        fl41_form: resolve(__dirname, 'pages/fl-41/state/form/index.html'),
+        fl41_accordion: resolve(
+          __dirname,
+          'pages/fl-41/state/accordion/index.html'
+        ),
+        fl41_chat: resolve(__dirname, 'pages/fl-41/state/chat/index.html'),
+        fl41_tasks: resolve(__dirname, 'pages/fl-41/state/tasks/index.html'),
+        fl41_sections: resolve(
+          __dirname,
+          'pages/fl-41/state/sections/index.html'
+        ),
+        fl41_tasks2: resolve(__dirname, 'pages/fl-41/state/tasks2/index.html'),
       },
     },
   },
