@@ -94,7 +94,7 @@ describe('State tests', () => {
     expect(consoleSpy).toHaveBeenCalledWith('The count is: [3]') // after re-render due to first click's setCount calls
   })
 
-  it("demonstrates than 'sub-object' are discrete objects unto themselves", () => {
+  it("demonstrates that 'sub-object' are discrete objects unto themselves", () => {
     const personnelRecord = {
       id: 1,
       person: {
