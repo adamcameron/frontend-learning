@@ -12,6 +12,12 @@ docker compose -f docker/docker-compose.yml build
 docker compose -f docker/docker-compose.yml up --detach
 ```
 
+## Build Vite app
+
+```
+docker exec -it frontend-learning-node-1  npm run build
+```
+
 ## Run Vite server
 
 ```
@@ -42,7 +48,7 @@ For me it's `file://wsl.localhost/Ubuntu/home/adam/source/frontend-learning/cove
 docker exec -it frontend-learning-node-1 npx eslint
 
 # using a file watcher:
- docker exec -it frontend-learning-node-1 npm run lint:watch
+docker exec -it frontend-learning-node-1 npm run lint:watch
 ```
 
 ## Running Prettier manually
@@ -66,4 +72,23 @@ docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --n
 
 # and watch for changes
 docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --watch --noEmit
+```
+
+## External dependencies
+
+The code herein requires the frontend-learning API to be running.
+See `https://github.com/adamcameron/frontend-learning-api/blob/main/README.md`;
+but in short:
+
+```
+docker exec -it frontend-learning-api-node-1 npm run dev
+```
+
+(Obvs provided the containers are built etc).
+
+From there, we should be able to fetch some data:
+
+```
+curl http://localhost:3000/profiles
+[{"id":1,"src":"/images/happy.png","alt":"Happy person"},{"id":2,"src":"/images/neutral.png","alt":"Neutral person"},{"id":3,"src":"/images/sad.png","alt":"Sad person"}]
 ```

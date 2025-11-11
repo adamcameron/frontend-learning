@@ -44,6 +44,8 @@ export default function Gallery() {
       {profiles.map((mugshot: Mugshot) => (
         <Profile {...mugshot} key={mugshot.id} />
       ))}
+      <br />
+      <a href="/pages/fl-41/profiles/add/">Add new profile</a>
     </section>
   )
 }
