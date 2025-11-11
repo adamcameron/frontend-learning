@@ -25,7 +25,7 @@ export default function Form() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} data-testid="form">
       Image URL:
       <input
         name="src"
@@ -33,6 +33,7 @@ export default function Form() {
         placeholder="eg: /images/shocked.png"
         onChange={handleChange}
         required={true}
+        data-testid="input-src"
       />
       <br />
       <samp>alt</samp> text:
@@ -41,9 +42,12 @@ export default function Form() {
         value={mugshot.alt}
         onChange={handleChange}
         required={true}
+        data-testid="input-alt"
       />
       <br />
-      <button disabled={isFormDisabled()}>Submit</button>
+      <button disabled={isFormDisabled()} data-testid="submitButton">
+        Submit
+      </button>
     </form>
   )
 }
