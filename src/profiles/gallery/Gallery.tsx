@@ -45,7 +45,7 @@ export default function Gallery() {
         <Profile {...mugshot} key={mugshot.id} />
       ))}
       <br />
-      <a href="/pages/fl-41/profiles/add/">Add new profile</a>
+      <a href="/pages/profiles/add/index.html">Add new profile</a>
     </section>
   )
 }

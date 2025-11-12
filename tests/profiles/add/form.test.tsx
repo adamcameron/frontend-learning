@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
-import Form from '@/fl-41/profiles/add/Form'
+import Form from '@/profiles/add/Form.tsx'
 
 describe('Tests for add-profile form', () => {
   it('has a disabled submit button whilst either text input is empty', () => {
