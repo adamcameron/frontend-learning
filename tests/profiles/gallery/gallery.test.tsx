@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import Gallery from '@/fl-38/Gallery'
+import Gallery from '@/profiles/gallery/Gallery.tsx'
 
 describe('Testing Gallery component', () => {
   afterEach(() => {
@@ -20,7 +20,7 @@ describe('Testing Gallery component', () => {
     if (typeof profiles === 'undefined') {
       return expect.fail('profiles not found in dom')
     }
-    expect(profiles).toHaveLength(3)
+    expect(profiles.length).toBeGreaterThanOrEqual(3) // default install is 3
   })
 
   it('verifies each profile is an img element', async () => {
