@@ -5,6 +5,10 @@ import { StatusCodes } from 'http-status-codes'
 import Form from '@/profiles/add/Form.tsx'
 
 describe('Tests for add-profile form', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   describe('UI behaviour tests', () => {
     it('has a disabled submit button whilst either text input is empty', () => {
       render(<Form />)
