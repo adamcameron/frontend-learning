@@ -54,7 +54,6 @@ export default function Form() {
         window.location.href = '/pages/profiles/gallery/'
       })
       .catch((e) => {
-        console.dir(e)
         setPostStatus(StatusMessages.NETWORK_ERROR)
         setFormStatus(FormStatuses.ACTIVE)
       })
