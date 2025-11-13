@@ -1,17 +1,28 @@
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
-
+import { MemoryRouter } from 'react-router-dom'
+import React from 'react'
 import Form from '@/profiles/add/Form.tsx'
 
+const mockedUsedNavigate = vi.fn()
+
 describe('Tests for add-profile form', () => {
+  beforeEach(() => {
+    vi.mock('react-router-dom', async () => {
+      return {
+        ...(await vi.importActual('react-router-dom')),
+        useNavigate: () => mockedUsedNavigate,
+      }
+    })
+  })
   afterEach(() => {
     vi.restoreAllMocks()
   })
 
   describe('UI behaviour tests', () => {
     it('has a disabled submit button whilst either text input is empty', () => {
-      render(<Form />)
+      renderWithRouter(Form)
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
       expect(inputs).toHaveLength(2)
 
@@ -80,24 +91,6 @@ describe('Tests for add-profile form', () => {
   })
 
   describe('OK response tests', () => {
-    const originalWindowLocation = window.location
-
-    beforeEach(() => {
-      Object.defineProperty(window, 'location', {
-        configurable: true,
-        enumerable: true,
-        value: { href: 'PLACE_HOLDER' },
-      })
-    })
-
-    afterEach(() => {
-      Object.defineProperty(window, 'location', {
-        configurable: true,
-        enumerable: true,
-        value: originalWindowLocation,
-      })
-    })
-
     it('redirects to the gallery on success', async () => {
       vi.spyOn(globalThis, 'fetch').mockResolvedValue({
         ok: true,
@@ -108,7 +101,7 @@ describe('Tests for add-profile form', () => {
       fillInAndSubmitForm()
 
       await waitFor(() => {
-        expect(window.location.href).toBe('/pages/profiles/gallery/')
+        expect(mockedUsedNavigate).toBeCalledWith('/profiles/gallery/')
       })
     })
 
@@ -117,7 +110,7 @@ describe('Tests for add-profile form', () => {
         () => new Promise(() => {}) // Never resolves - stays pending forever
       )
 
-      render(<Form />)
+      renderWithRouter(Form)
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
 
       fireEvent.change(inputs[0], { target: { value: 'valid src' } })
@@ -139,8 +132,16 @@ describe('Tests for add-profile form', () => {
   })
 })
 
+function renderWithRouter(ComponentToRender: React.FC) {
+  render(
+    <MemoryRouter initialEntries={['/UNTESTED-ROUTE']}>
+      <ComponentToRender />
+    </MemoryRouter>
+  )
+}
+
 function fillInAndSubmitForm() {
-  render(<Form />)
+  renderWithRouter(Form)
   const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
 
   act(() => {

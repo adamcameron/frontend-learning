@@ -1,9 +1,14 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Gallery from './Gallery.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Gallery />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/pages/profiles/gallery/" element={<Gallery />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>
 )
