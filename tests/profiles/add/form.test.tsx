@@ -2,7 +2,6 @@ import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { MemoryRouter } from 'react-router-dom'
-//import React from 'react'
 import Form from '@/profiles/add/Form.tsx'
 
 const mockedUsedNavigate = vi.fn()
