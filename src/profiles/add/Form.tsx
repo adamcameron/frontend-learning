@@ -2,6 +2,7 @@ import { useState } from 'react'
 import React from 'react'
 import { StatusCodes } from 'http-status-codes'
 import './styles.css'
+import { useNavigate } from 'react-router-dom'
 
 const StatusMessages = {
   CLIENT_ERROR: 'Unexpected data validation error',
@@ -25,6 +26,7 @@ export default function Form() {
   const [mugshot, setMugshot] = useState<unsavedMugshot>(emptyMugshot)
   const [postStatus, setPostStatus] = useState<string>('')
   const [formStatus, setFormStatus] = useState<FormStatus>(FormStatuses.ACTIVE)
+  const navigate = useNavigate()
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const fieldName = e.target.name
@@ -51,7 +53,7 @@ export default function Form() {
           setFormStatus(FormStatuses.ACTIVE)
           return
         }
-        window.location.href = '/pages/profiles/gallery/'
+        void navigate('/profiles/gallery/')
       })
       .catch(() => {
         setPostStatus(StatusMessages.NETWORK_ERROR)

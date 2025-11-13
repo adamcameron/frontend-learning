@@ -1,0 +1,11 @@
+ul.inline > li {
+  display: inline-block;
+}
+
+ul.inline li:after {
+  margin: 0 1em;
+  content: '|';
+}
+ul.inline li:last-child:after {
+  content: none;
+}
