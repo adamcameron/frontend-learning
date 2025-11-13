@@ -44,7 +44,7 @@ export default function Form() {
       .then((response) => {
         if (!response.ok) {
           setPostStatus(
-            response.status === StatusCodes.BAD_REQUEST
+            response.status === Number(StatusCodes.BAD_REQUEST)
               ? StatusMessages.CLIENT_ERROR
               : StatusMessages.SERVER_ERROR
           )
@@ -53,7 +53,7 @@ export default function Form() {
         }
         window.location.href = '/pages/profiles/gallery/'
       })
-      .catch((e) => {
+      .catch(() => {
         setPostStatus(StatusMessages.NETWORK_ERROR)
         setFormStatus(FormStatuses.ACTIVE)
       })
