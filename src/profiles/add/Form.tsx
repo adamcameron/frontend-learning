@@ -43,7 +43,7 @@ export default function Form() {
       method: 'POST',
       body: JSON.stringify(mugshot),
     })
-      .then(async (response) => {
+      .then((response) => {
         if (!response.ok) {
           setPostStatus(
             response.status === Number(StatusCodes.BAD_REQUEST)
@@ -53,7 +53,7 @@ export default function Form() {
           setFormStatus(FormStatuses.ACTIVE)
           return
         }
-        await navigate('/profiles/gallery/')
+        void navigate('/profiles/gallery/')
       })
       .catch(() => {
         setPostStatus(StatusMessages.NETWORK_ERROR)

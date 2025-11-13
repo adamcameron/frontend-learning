@@ -1,29 +1,26 @@
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { MemoryRouter } from 'react-router-dom'
-import React from 'react'
+//import React from 'react'
 import Form from '@/profiles/add/Form.tsx'
 
-// needs to be here as the call to vi.mock is hoisted
 const mockedUsedNavigate = vi.fn()
+vi.mock('react-router-dom', async () => {
+  return {
+    ...(await vi.importActual('react-router-dom')),
+    useNavigate: () => mockedUsedNavigate,
+  }
+})
 
 describe('Tests for add-profile form', () => {
-  beforeEach(() => {
-    vi.mock('react-router-dom', async () => {
-      return {
-        ...(await vi.importActual('react-router-dom')),
-        useNavigate: () => mockedUsedNavigate,
-      }
-    })
-  })
   afterEach(() => {
-    vi.restoreAllMocks()
+    vi.clearAllMocks()
   })
 
   describe('UI behaviour tests', () => {
     it('has a disabled submit button whilst either text input is empty', () => {
-      renderWithRouter(Form)
+      renderFormWithRouter()
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
       expect(inputs).toHaveLength(2)
 
@@ -111,7 +108,7 @@ describe('Tests for add-profile form', () => {
         () => new Promise(() => {}) // Never resolves - stays pending forever
       )
 
-      renderWithRouter(Form)
+      renderFormWithRouter()
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
 
       fireEvent.change(inputs[0], { target: { value: 'valid src' } })
@@ -133,16 +130,16 @@ describe('Tests for add-profile form', () => {
   })
 })
 
-function renderWithRouter(ComponentToRender: React.FC) {
+function renderFormWithRouter() {
   render(
     <MemoryRouter initialEntries={['/UNTESTED-ROUTE']}>
-      <ComponentToRender />
+      <Form />
     </MemoryRouter>
   )
 }
 
 function fillInAndSubmitForm() {
-  renderWithRouter(Form)
+  renderFormWithRouter()
   const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
 
   act(() => {
