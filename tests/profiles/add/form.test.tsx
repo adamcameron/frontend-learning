@@ -66,7 +66,7 @@ describe('Tests for add-profile form', () => {
 
     it('displays an unreachable server error on server unreachable', async () => {
       vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
-        return Promise.reject('MOCKED_FETCH_ERROR')
+        return Promise.reject(new Error('MOCKED_FETCH_ERROR'))
       })
 
       fillInAndSubmitForm()
@@ -80,7 +80,7 @@ describe('Tests for add-profile form', () => {
   })
 
   describe('OK response tests', () => {
-    let originalWindowLocation = window.location
+    const originalWindowLocation = window.location
 
     beforeEach(() => {
       Object.defineProperty(window, 'location', {
@@ -112,7 +112,7 @@ describe('Tests for add-profile form', () => {
       })
     })
 
-    it('disables submit whilst processing the submission', async () => {
+    it('disables submit whilst processing the submission', () => {
       vi.spyOn(globalThis, 'fetch').mockImplementation(
         () => new Promise(() => {}) // Never resolves - stays pending forever
       )
@@ -139,11 +139,11 @@ describe('Tests for add-profile form', () => {
   })
 })
 
-async function fillInAndSubmitForm() {
+function fillInAndSubmitForm() {
   render(<Form />)
   const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
 
-  await act(async () => {
+  act(() => {
     fireEvent.change(inputs[0], { target: { value: 'valid src value' } })
     fireEvent.change(inputs[1], { target: { value: 'valid alt value' } })
 
