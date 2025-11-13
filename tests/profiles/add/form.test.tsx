@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import React from 'react'
 import Form from '@/profiles/add/Form.tsx'
 
+// needs to be here as the call to vi.mock is hoisted
 const mockedUsedNavigate = vi.fn()
 
 describe('Tests for add-profile form', () => {
