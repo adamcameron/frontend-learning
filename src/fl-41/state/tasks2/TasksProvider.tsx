@@ -1,14 +1,13 @@
 // copied from https://react.dev/learn/managing-state#scaling-up-with-reducer-and-context and TSified
 // (poss in violation of Meta's (c), but they're not clear on the licensing: the page does mention "open source")
-import { useReducer } from 'react'
-import React from 'react'
+import { useReducer, type ReactNode } from 'react'
 import {
   tasksReducer,
   TasksContext,
   TasksDispatchContext,
 } from './tasksContext.tsx'
 
-export function TasksProvider({ children }: { children: React.ReactNode }) {
+export function TasksProvider({ children }: { children: ReactNode }) {
   const [tasks, dispatch] = useReducer(tasksReducer, initialTasks)
 
   return (

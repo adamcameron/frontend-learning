@@ -44,7 +44,7 @@ describe('Testing Gallery component', () => {
     })
   })
 
-  it('displays an error message non-200', async () => {
+  it('displays an error message on non-200', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: false,
       status: 500,

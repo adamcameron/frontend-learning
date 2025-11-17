@@ -1,4 +1,4 @@
-import React from 'react'
+import { type ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import './gallery.css'
 
@@ -41,7 +41,7 @@ export default function Gallery() {
   )
 }
 
-function wrapInGallery(children: React.ReactNode) {
+function wrapInGallery(children: ReactNode) {
   return <section data-testid="gallery">{children}</section>
 }
 

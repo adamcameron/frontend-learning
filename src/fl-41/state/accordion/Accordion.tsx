@@ -1,7 +1,7 @@
 // copied from https://react.dev/learn/managing-state#sharing-state-between-components and TSified
 // (poss in violation of Meta's (c), but they're not clear on the licensing: the page does mention "open source")
 
-import React from 'react'
+import type { ReactNode } from 'react'
 import { useState } from 'react'
 
 export default function Accordion() {
@@ -35,7 +35,7 @@ export default function Accordion() {
 
 type panelParams = {
   title: string
-  children: React.ReactNode
+  children: ReactNode
   isActive: boolean
   onShow: () => void
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import React from 'react'
+import { type ChangeEvent, type FormEvent } from 'react'
 import { StatusCodes } from 'http-status-codes'
 import './styles.css'
 import { useNavigate } from 'react-router-dom'
@@ -28,12 +28,12 @@ export default function Form() {
   const [formStatus, setFormStatus] = useState<FormStatus>(FormStatuses.ACTIVE)
   const navigate = useNavigate()
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const fieldName = e.target.name
     setMugshot({ ...mugshot, [fieldName]: e.target.value })
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setFormStatus(FormStatuses.PROCESSING)
     fetch(`${import.meta.env.VITE_API_BASE_URL}/profiles`, {
