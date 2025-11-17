@@ -131,7 +131,7 @@ describe('Tests for add-profile form', () => {
         ).toBe(false)
       })
 
-      void waitFor(() => {
+      await waitFor(() => {
         const submit: HTMLButtonElement = screen.getByTestId('submitButton')
         fireEvent.click(submit)
         expect(
