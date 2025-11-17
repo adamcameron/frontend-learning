@@ -11,7 +11,7 @@ describe('Testing Gallery component', () => {
   })
 
   it('renders the Gallery component with the correct number of profiles', async () => {
-    rendergalleryWithQueryClientProvider()
+    renderGalleryWithQueryClientProvider()
 
     let profiles: HTMLElement[] | undefined
 
@@ -27,7 +27,7 @@ describe('Testing Gallery component', () => {
   })
 
   it('verifies each profile is an img element', async () => {
-    rendergalleryWithQueryClientProvider()
+    renderGalleryWithQueryClientProvider()
 
     let profiles: HTMLElement[] | undefined
 
@@ -51,7 +51,7 @@ describe('Testing Gallery component', () => {
       json: async () => Promise.resolve([]),
     } as Response)
 
-    rendergalleryWithQueryClientProvider()
+    renderGalleryWithQueryClientProvider()
     await waitFor(() => {
       const galleryError = screen.getByTestId('gallery-error')
       expect(galleryError).toBeDefined()
@@ -60,7 +60,7 @@ describe('Testing Gallery component', () => {
   })
 })
 
-function rendergalleryWithQueryClientProvider() {
+function renderGalleryWithQueryClientProvider() {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   })
