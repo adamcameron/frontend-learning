@@ -1,7 +1,10 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react'
 import { StatusCodes } from 'http-status-codes'
-import './styles.css'
 import { useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { type Mugshot, type UnsavedMugshot } from '../mugshot.tsx'
+
+import './styles.css'
 
 const StatusMessages = {
   CLIENT_ERROR: 'Unexpected data validation error',
@@ -9,22 +12,32 @@ const StatusMessages = {
   NETWORK_ERROR: 'Network error when making request',
 }
 
-const FormStatuses = {
-  ACTIVE: 'ACTIVE',
-  PROCESSING: 'PROCESSING',
-}
-
-type FormStatus = (typeof FormStatuses)[keyof typeof FormStatuses]
-
 export default function Form() {
-  type unsavedMugshot = { src: string; alt: string }
-  const emptyMugshot = {
-    src: '',
-    alt: '',
-  }
-  const [mugshot, setMugshot] = useState<unsavedMugshot>(emptyMugshot)
+  const mutation = useMutation({
+    mutationFn: addProfile,
+    onMutate: () => {
+      setPostStatus('') // Clear any previous error
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['ALL_PROFILES'] })
+      void navigate('/profiles/gallery/')
+    },
+    onError: (e) => {
+      if (e instanceof UnsuccessfulRequestError) {
+        setPostStatus(
+          e.message === String(StatusCodes.BAD_REQUEST)
+            ? StatusMessages.CLIENT_ERROR
+            : StatusMessages.SERVER_ERROR
+        )
+        return
+      }
+      setPostStatus(StatusMessages.NETWORK_ERROR)
+    },
+  })
+  const queryClient = useQueryClient()
+
+  const [mugshot, setMugshot] = useState<UnsavedMugshot>({ src: '', alt: '' })
   const [postStatus, setPostStatus] = useState<string>('')
-  const [formStatus, setFormStatus] = useState<FormStatus>(FormStatuses.ACTIVE)
   const navigate = useNavigate()
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -34,37 +47,13 @@ export default function Form() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    setFormStatus(FormStatuses.PROCESSING)
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/profiles`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(mugshot),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          setPostStatus(
-            response.status === Number(StatusCodes.BAD_REQUEST)
-              ? StatusMessages.CLIENT_ERROR
-              : StatusMessages.SERVER_ERROR
-          )
-          setFormStatus(FormStatuses.ACTIVE)
-          return
-        }
-        void navigate('/profiles/gallery/')
-      })
-      .catch(() => {
-        setPostStatus(StatusMessages.NETWORK_ERROR)
-        setFormStatus(FormStatuses.ACTIVE)
-      })
+
+    mutation.mutate(mugshot)
   }
 
   function isFormDisabled() {
     return (
-      formStatus === FormStatuses.PROCESSING ||
-      mugshot.src.length === 0 ||
-      mugshot.alt.length === 0
+      mutation.isPending || mugshot.src.length === 0 || mugshot.alt.length === 0
     )
   }
 
@@ -98,3 +87,22 @@ export default function Form() {
     </form>
   )
 }
+
+async function addProfile(mugshot: UnsavedMugshot): Promise<Mugshot> {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/profiles`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(mugshot),
+    }
+  )
+  if (!response.ok) {
+    throw new UnsuccessfulRequestError(String(response.status))
+  }
+  return response.json() as Promise<Mugshot>
+}
+
+class UnsuccessfulRequestError extends Error {}

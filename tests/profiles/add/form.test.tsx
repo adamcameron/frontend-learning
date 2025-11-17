@@ -1,7 +1,8 @@
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Form from '@/profiles/add/Form.tsx'
 
 const mockedUsedNavigate = vi.fn()
@@ -13,13 +14,22 @@ vi.mock('react-router-dom', async () => {
 })
 
 describe('Tests for add-profile form', () => {
+  let queryClient: QueryClient
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+  })
+
   afterEach(() => {
     vi.clearAllMocks()
+    queryClient.clear()
   })
 
   describe('UI behaviour tests', () => {
     it('has a disabled submit button whilst either text input is empty', () => {
-      renderFormWithRouter()
+      renderFormWithAllProviders()
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
       expect(inputs).toHaveLength(2)
 
@@ -102,50 +112,56 @@ describe('Tests for add-profile form', () => {
       })
     })
 
-    it('disables submit whilst processing the submission', () => {
+    it('disables submit whilst processing the submission', async () => {
       vi.spyOn(globalThis, 'fetch').mockImplementation(
         () => new Promise(() => {}) // Never resolves - stays pending forever
       )
 
-      renderFormWithRouter()
+      renderFormWithAllProviders()
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
 
       fireEvent.change(inputs[0], { target: { value: 'valid src' } })
       fireEvent.change(inputs[1], { target: { value: 'valid alt' } })
 
+      await waitFor(() => {
+        const submit: HTMLButtonElement = screen.getByTestId('submitButton')
+        expect(
+          submit.disabled,
+          'submit should be enabled immediately before submission'
+        ).toBe(false)
+      })
+
       const submit: HTMLButtonElement = screen.getByTestId('submitButton')
-      expect(
-        submit.disabled,
-        'submit should be enabled immediately before submission'
-      ).toBe(false)
-
       fireEvent.click(submit)
-
-      expect(
-        submit.disabled,
-        'submit should be disabled whilst processing'
-      ).toBe(true)
+      await waitFor(() => {
+        expect(
+          submit.disabled,
+          'submit should be disabled whilst processing'
+        ).toBe(true)
+      })
     })
   })
+
+  function renderFormWithAllProviders() {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={['/profiles/add/']}>
+          <Form />
+        </MemoryRouter>
+      </QueryClientProvider>
+    )
+  }
+
+  function fillInAndSubmitForm() {
+    renderFormWithAllProviders()
+    const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
+
+    act(() => {
+      fireEvent.change(inputs[0], { target: { value: 'valid src value' } })
+      fireEvent.change(inputs[1], { target: { value: 'valid alt value' } })
+
+      const submit: HTMLButtonElement = screen.getByTestId('submitButton')
+      fireEvent.click(submit)
+    })
+  }
 })
-
-function renderFormWithRouter() {
-  render(
-    <MemoryRouter initialEntries={['/UNTESTED-ROUTE']}>
-      <Form />
-    </MemoryRouter>
-  )
-}
-
-function fillInAndSubmitForm() {
-  renderFormWithRouter()
-  const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
-
-  act(() => {
-    fireEvent.change(inputs[0], { target: { value: 'valid src value' } })
-    fireEvent.change(inputs[1], { target: { value: 'valid alt value' } })
-
-    const submit: HTMLButtonElement = screen.getByTestId('submitButton')
-    fireEvent.click(submit)
-  })
-}
