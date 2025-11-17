@@ -1,13 +1,21 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Gallery from '@/profiles/gallery/Gallery.tsx'
 
 describe('Testing Gallery component', () => {
   const waitForOptions = { timeout: 1000 }
+  let queryClient: QueryClient
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+  })
 
   afterEach(() => {
     vi.clearAllMocks()
+    queryClient.clear()
   })
 
   it('renders the Gallery component with the correct number of profiles', async () => {
@@ -58,15 +66,12 @@ describe('Testing Gallery component', () => {
       expect(galleryError.textContent).toBe('Error: Response status: 500')
     }, waitForOptions)
   })
-})
 
-function renderGalleryWithQueryClientProvider() {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  })
-  render(
-    <QueryClientProvider client={queryClient}>
-      <Gallery />
-    </QueryClientProvider>
-  )
-}
+  function renderGalleryWithQueryClientProvider() {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Gallery />
+      </QueryClientProvider>
+    )
+  }
+})
