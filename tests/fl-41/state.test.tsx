@@ -1,7 +1,6 @@
-import React from 'react'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
-import { useState, useEffect, type MouseEvent } from 'react'
+import { useState, useEffect, type MouseEvent, type ReactElement } from 'react'
 import { useImmer } from 'use-immer'
 
 describe('State tests', () => {
@@ -122,7 +121,7 @@ describe('State tests', () => {
       },
     }
 
-    async function exerciseComponent(component: React.ReactElement) {
+    async function exerciseComponent(component: ReactElement) {
       const id = (component.props as { 'data-testid': number })['data-testid']
       render(component)
       await waitFor(() => {

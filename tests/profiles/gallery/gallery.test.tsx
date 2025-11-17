@@ -1,21 +1,32 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Gallery from '@/profiles/gallery/Gallery.tsx'
 
 describe('Testing Gallery component', () => {
+  const waitForOptions = { timeout: 1000 }
+  let queryClient: QueryClient
+
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+  })
+
   afterEach(() => {
-    vi.clearAllMocks() // Reset all mocked calls between tests
+    vi.clearAllMocks()
+    queryClient.clear()
   })
 
   it('renders the Gallery component with the correct number of profiles', async () => {
-    render(<Gallery />)
+    renderGalleryWithQueryClientProvider()
 
     let profiles: HTMLElement[] | undefined
 
     await waitFor(() => {
       profiles = screen.getAllByTestId('profile')
       expect(profiles).toBeDefined()
-    })
+    }, waitForOptions)
 
     if (typeof profiles === 'undefined') {
       return expect.fail('profiles not found in dom')
@@ -24,14 +35,14 @@ describe('Testing Gallery component', () => {
   })
 
   it('verifies each profile is an img element', async () => {
-    render(<Gallery />)
+    renderGalleryWithQueryClientProvider()
 
     let profiles: HTMLElement[] | undefined
 
     await waitFor(() => {
       profiles = screen.getAllByTestId('profile')
       expect(profiles).toBeDefined()
-    })
+    }, waitForOptions)
     if (typeof profiles === 'undefined') {
       return expect.fail('profiles not found in dom')
     }
@@ -41,21 +52,26 @@ describe('Testing Gallery component', () => {
     })
   })
 
-  it('logs to console if the response is non-200', async () => {
+  it('displays an error message on non-200', async () => {
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: false,
       status: 500,
       json: async () => Promise.resolve([]),
     } as Response)
 
-    const consoleSpy = vi.spyOn(console, 'error')
-    consoleSpy.mockImplementation(() => {})
-
-    render(<Gallery />)
+    renderGalleryWithQueryClientProvider()
     await waitFor(() => {
-      expect(screen.getAllByTestId('gallery')).toBeDefined()
-    })
-
-    expect(consoleSpy).toHaveBeenCalledWith(new Error('Response status: 500'))
+      const galleryError = screen.getByTestId('gallery-error')
+      expect(galleryError).toBeDefined()
+      expect(galleryError.textContent).toBe('Error: Response status: 500')
+    }, waitForOptions)
   })
+
+  function renderGalleryWithQueryClientProvider() {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <Gallery />
+      </QueryClientProvider>
+    )
+  }
 })

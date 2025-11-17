@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { type ReactNode } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import './gallery.css'
 
 type Mugshot = { id: number; src: string; alt: string }
@@ -16,34 +17,41 @@ function Profile({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function Gallery() {
-  const [profiles, setProfiles] = useState<Mugshot[]>([])
-  useEffect(() => {
-    let ignore = false
-    async function fetchProfiles() {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/profiles`
-      )
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`)
-      }
-      const body: Mugshot[] = (await response.json()) as unknown as Mugshot[]
-      if (!ignore) {
-        setProfiles(body)
-      }
-    }
-    fetchProfiles().catch((e) => {
-      console.error(e)
-    })
-    return () => {
-      ignore = true
-    }
-  }, [])
-  return (
-    <section data-testid="gallery">
+  const { isPending, isError, data, error } = useQuery<Mugshot[]>({
+    queryKey: ['ALL_PROFILES'],
+    queryFn: fetchProfiles,
+  })
+
+  if (isPending) {
+    return wrapInGallery('Loading...')
+  }
+  if (isError) {
+    return wrapInGallery(
+      <span data-testid="gallery-error">Error: {error.message}</span>
+    )
+  }
+
+  return wrapInGallery(
+    <>
       <h1>Amazing scientists</h1>
-      {profiles.map((mugshot: Mugshot) => (
+      {data.map((mugshot: Mugshot) => (
         <Profile {...mugshot} key={mugshot.id} />
       ))}
-    </section>
+    </>
   )
+}
+
+function wrapInGallery(children: ReactNode) {
+  return <section data-testid="gallery">{children}</section>
+}
+
+async function fetchProfiles(): Promise<Mugshot[]> {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/profiles`)
+  if (!response.ok) {
+    throw new Error(`Response status: ${response.status}`)
+  }
+
+  // out of scope: proper validation that it's returning a Mugshot[]
+
+  return response.json() as Promise<Mugshot[]>
 }
