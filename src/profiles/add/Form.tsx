@@ -13,7 +13,27 @@ const StatusMessages = {
 }
 
 export default function Form() {
-  const mutation = useMutation({ mutationFn: addProfile })
+  const mutation = useMutation({
+    mutationFn: addProfile,
+    onMutate: () => {
+      setPostStatus('') // Clear any previous error
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['ALL_PROFILES'] })
+      void navigate('/profiles/gallery/')
+    },
+    onError: (e) => {
+      if (e instanceof UnsuccessfulRequestError) {
+        setPostStatus(
+          e.message === String(StatusCodes.BAD_REQUEST)
+            ? StatusMessages.CLIENT_ERROR
+            : StatusMessages.SERVER_ERROR
+        )
+        return
+      }
+      setPostStatus(StatusMessages.NETWORK_ERROR)
+    },
+  })
   const queryClient = useQueryClient()
 
   const [mugshot, setMugshot] = useState<UnsavedMugshot>({ src: '', alt: '' })
@@ -28,23 +48,7 @@ export default function Form() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
 
-    mutation.mutate(mugshot, {
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: ['ALL_PROFILES'] })
-        void navigate('/profiles/gallery/')
-      },
-      onError: (e) => {
-        if (e instanceof UnsuccessfulRequestError) {
-          setPostStatus(
-            e.message === String(StatusCodes.BAD_REQUEST)
-              ? StatusMessages.CLIENT_ERROR
-              : StatusMessages.SERVER_ERROR
-          )
-          return
-        }
-        setPostStatus(StatusMessages.NETWORK_ERROR)
-      },
-    })
+    mutation.mutate(mugshot)
   }
 
   function isFormDisabled() {

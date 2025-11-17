@@ -131,9 +131,9 @@ describe('Tests for add-profile form', () => {
         ).toBe(false)
       })
 
+      const submit: HTMLButtonElement = screen.getByTestId('submitButton')
+      fireEvent.click(submit)
       await waitFor(() => {
-        const submit: HTMLButtonElement = screen.getByTestId('submitButton')
-        fireEvent.click(submit)
         expect(
           submit.disabled,
           'submit should be disabled whilst processing'
