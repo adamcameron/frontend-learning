@@ -1,8 +1,7 @@
 //  copied from https://react.dev/learn/managing-state#reacting-to-input-with-state & TSified
 // (poss in violation of Meta's (c), but they're not clear on the licensing: the page does mention "open source")
 
-import React from 'react'
-import { useState } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 
 const STATUS = {
   IDLE: 'idle',
@@ -17,11 +16,11 @@ export default function Form() {
   const [error, setError] = useState<Error | null>(null)
   const [status, setStatus] = useState<status>(STATUS.IDLE)
 
-  function handleTextareaChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  function handleTextareaChange(e: ChangeEvent<HTMLTextAreaElement>) {
     setAnswer(e.target.value)
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     setStatus(STATUS.SUBMITTED)
     try {
