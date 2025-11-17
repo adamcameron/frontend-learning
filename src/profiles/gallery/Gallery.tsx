@@ -1,8 +1,7 @@
 import { type ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import './gallery.css'
-
-type Mugshot = { id: number; src: string; alt: string }
+import { type Mugshot } from '../mugshot.tsx'
 
 function Profile({ src, alt }: { src: string; alt: string }) {
   return (
