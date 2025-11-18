@@ -5,7 +5,7 @@ import AddTask from './AddTask.tsx'
 import TaskList from './TaskList.tsx'
 import { TasksProvider } from './TasksProvider.tsx'
 
-export default function TaskApp() {
+export default function App() {
   return (
     <TasksProvider>
       <h1>Day off in Kyoto</h1>
