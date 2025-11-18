@@ -13,7 +13,7 @@ export type dispatchAction =
   | { type: 'changed'; task: task }
   | { type: 'deleted'; id: number }
 
-export default function TaskApp() {
+export default function App() {
   const [tasks, dispatch] = useReducer(tasksReducer, initialTasks)
 
   function handleAddTask(text: string) {

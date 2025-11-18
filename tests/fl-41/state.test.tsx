@@ -8,7 +8,7 @@ describe('State tests', () => {
     function TestContainer() {
       return <div data-testid="c1" />
     }
-    render(<TestContainer data-testid="c1" />)
+    render(<TestContainer />)
 
     await waitFor(() => screen.getByTestId('c1'))
   })
@@ -27,7 +27,7 @@ describe('State tests', () => {
       return isShown ? <div data-testid="c2" /> : null
     }
 
-    render(<SlowTestContainer data-testid="c2" />)
+    render(<SlowTestContainer />)
 
     await expect(async () => {
       await waitFor(() => screen.getByTestId('c2'), { timeout: delay / 2 })
@@ -51,7 +51,7 @@ describe('State tests', () => {
     const consoleSpy = vi.spyOn(console, 'log')
     consoleSpy.mockImplementation(() => {})
 
-    render(<TestButton data-testid="b1" />)
+    render(<TestButton />)
 
     await waitFor(() => {
       const container = screen.getByTestId('b1')
@@ -81,7 +81,7 @@ describe('State tests', () => {
     const consoleSpy = vi.spyOn(console, 'log')
     consoleSpy.mockImplementation(() => {})
 
-    render(<TestButton data-testid="b2" />)
+    render(<TestButton />)
 
     await waitFor(() => {
       const container = screen.getByTestId('b2')
@@ -106,6 +106,7 @@ describe('State tests', () => {
 
     expect(personnelRecord.person.family).toBe('Cameron Lynch')
   })
+
   describe('Updating state object tests', () => {
     type nullableString = string | null
     type nullableNumber = number | null
@@ -122,7 +123,9 @@ describe('State tests', () => {
     }
 
     async function exerciseComponent(component: ReactElement) {
-      const id = (component.props as { 'data-testid': number })['data-testid']
+      const id = (component.props as { 'data-container-id': number })[
+        'data-container-id'
+      ]
       render(component)
       await waitFor(() => {
         const container = screen.getByTestId(id)
@@ -195,7 +198,7 @@ describe('State tests', () => {
       const consoleSpy = vi.spyOn(console, 'log')
       consoleSpy.mockImplementation(() => {})
 
-      await exerciseComponent(<PersonnelRecord data-testid="r1" />)
+      await exerciseComponent(<PersonnelRecord data-container-id="r1" />)
       expect(consoleSpy).toUpdateStateCorrectly()
     })
 
@@ -234,7 +237,7 @@ describe('State tests', () => {
       const consoleSpy = vi.spyOn(console, 'log')
       consoleSpy.mockImplementation(() => {})
 
-      await exerciseComponent(<PersonnelRecord data-testid="r2" />)
+      await exerciseComponent(<PersonnelRecord data-container-id="r2" />)
       expect(consoleSpy).toUpdateStateCorrectly()
     })
   })

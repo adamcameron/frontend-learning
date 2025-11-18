@@ -20,6 +20,7 @@ export default defineConfig({
           'pages/fl-41/state/sections/index.html'
         ),
         fl41_tasks2: resolve(__dirname, 'pages/fl-41/state/tasks2/index.html'),
+        fl48_useref: resolve(__dirname, 'pages/fl-48/useref/index.html'),
       },
     },
   },
