@@ -21,6 +21,14 @@ export default defineConfig({
         ),
         fl41_tasks2: resolve(__dirname, 'pages/fl-41/state/tasks2/index.html'),
         fl48_useref: resolve(__dirname, 'pages/fl-48/useref/index.html'),
+        fl49_custom_hooks_status_bar: resolve(
+          __dirname,
+          'pages/fl-49/custom-hooks/status-bar/index.html'
+        ),
+        fl49_custom_hooks_save_button: resolve(
+          __dirname,
+          'pages/fl-49/custom-hooks/save-button/index.html'
+        ),
       },
     },
   },
