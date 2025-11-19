@@ -15,7 +15,7 @@ describe('Tests of custom hooks', () => {
       ).toBe('✅ Online')
     })
 
-    await act(async () => {
+    act(() => {
       window.dispatchEvent(new window.Event('offline'))
     })
     await waitFor(() => {
