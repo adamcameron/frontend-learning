@@ -29,6 +29,7 @@ export default defineConfig({
           __dirname,
           'pages/fl-49/custom-hooks/save-button/index.html'
         ),
+        fl50_error_boundary: resolve(__dirname, 'pages/fl-50/index.html'),
       },
     },
   },
