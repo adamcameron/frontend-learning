@@ -105,7 +105,7 @@ async function addProfile(mugshot: UnsavedMugshot): Promise<Mugshot> {
     )
   }
 
-  return Promise.resolve(data[1])
+  return Promise.resolve(data[0])
 }
 
 class UnsuccessfulRequestError extends Error {}
