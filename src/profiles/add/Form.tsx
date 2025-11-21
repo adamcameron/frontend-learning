@@ -24,7 +24,6 @@ export default function Form() {
       void navigate('/profiles/gallery/')
     },
     onError: (e) => {
-      console.dir(e)
       if (e instanceof UnsuccessfulRequestError) {
         setPostStatus(
           e.message === String(StatusCodes.BAD_REQUEST)

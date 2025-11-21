@@ -43,21 +43,22 @@ export default function Gallery() {
 }
 
 function wrapInGallery(children: ReactNode) {
-  return <section data-testid="gallery">  {children}</section>
+  return <section data-testid="gallery">{children}</section>
 }
 
 async function fetchProfiles(): Promise<Mugshot[]> {
-  const { data, status}: {data: Mugshot[]|null, status: number} = await supabaseClient
-    .from('profiles')
-    .select()
-    .overrideTypes<Array<Mugshot>, { merge: false }>()
+  const { data, status }: { data: Mugshot[] | null; status: number } =
+    await supabaseClient
+      .from('profiles')
+      .select()
+      .overrideTypes<Array<Mugshot>, { merge: false }>()
 
   if (status !== Number(StatusCodes.OK)) {
     throw new Error(`Response status: ${status}`)
   }
 
   if (data === null) {
-    throw new Error("Unexpected logic exception")
+    throw new Error('Unexpected logic exception')
   }
 
   // out of scope: proper validation that it's returning a Mugshot[]
