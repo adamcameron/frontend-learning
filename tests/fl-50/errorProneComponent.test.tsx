@@ -11,7 +11,7 @@ describe("Tests of ErrorProneComponent's ErrorBoundary", () => {
   })
 
   it("renders the button when it's safe", async () => {
-    let button = await renderAndAwaitButton()
+    const button = await renderAndAwaitButton()
 
     expect(
       button.textContent,
@@ -20,7 +20,7 @@ describe("Tests of ErrorProneComponent's ErrorBoundary", () => {
   })
 
   it("renders the error message when it's not safe", async () => {
-    let button = await renderAndAwaitButton()
+    const button = await renderAndAwaitButton()
 
     fireEvent.click(button)
 
