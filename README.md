@@ -76,19 +76,25 @@ docker exec -it frontend-learning-node-1 npx tsc --project tsconfig.app.json --w
 
 ## External dependencies
 
-The code herein requires the frontend-learning API to be running.
-See `https://github.com/adamcameron/frontend-learning-api/blob/main/README.md`;
-but in short:
+The code herein requires the Supabase containers to be running.
+They should start automatically, but if not - or if they need to be rebuilt -
+see the docs @ https://supabase.com/docs/guides/self-hosting/docker
+
+Some tests require a `profiles` table to exist, with some data in place:
 
 ```
-docker exec -it frontend-learning-api-node-1 npm run dev
+CREATE TABLE profiles (
+    id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    src VARCHAR(500) NOT NULL,
+    alt VARCHAR(100) NOT NULL
+);
+
+INSERT INTO profiles (src,alt)
+VALUES
+    ('/images/happy.png','Happy person'),
+    ('/images/neutral.png','Neutral person'),
+    ('/images/sad.png','Sad person')
+;
 ```
 
-(Obvs provided the containers are built etc).
-
-From there, we should be able to fetch some data:
-
-```
-curl http://localhost:3000/profiles
-[{"id":1,"src":"/images/happy.png","alt":"Happy person"},{"id":2,"src":"/images/neutral.png","alt":"Neutral person"},{"id":3,"src":"/images/sad.png","alt":"Sad person"}]
-```
+This lot can be added via the Supabase admin, or straight into the `public` schema of the `postgres` DB.

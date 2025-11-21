@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Mugshot, type UnsavedMugshot } from '../mugshot.tsx'
+import { supabaseClient } from '../lib/supabase.ts'
 
 import './styles.css'
 
@@ -89,20 +90,22 @@ export default function Form() {
 }
 
 async function addProfile(mugshot: UnsavedMugshot): Promise<Mugshot> {
-  const response = await fetch(
-    `${import.meta.env.VITE_API_BASE_URL}/profiles`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-      body: JSON.stringify(mugshot),
-    }
-  )
-  if (!response.ok) {
-    throw new UnsuccessfulRequestError(String(response.status))
+  const {
+    data,
+    status,
+  }: { data: Mugshot[] | null; error: unknown; status: number } =
+    await supabaseClient.from('profiles').insert(mugshot).select()
+
+  if (status !== Number(StatusCodes.CREATED)) {
+    throw new UnsuccessfulRequestError(String(status))
   }
-  return response.json() as Promise<Mugshot>
+  if (data === null || data.length !== 1) {
+    throw new UnsuccessfulRequestError(
+      String(StatusCodes.INTERNAL_SERVER_ERROR)
+    )
+  }
+
+  return Promise.resolve(data[0])
 }
 
 class UnsuccessfulRequestError extends Error {}

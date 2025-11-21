@@ -30,6 +30,10 @@ export default defineConfig({
           'pages/fl-49/custom-hooks/save-button/index.html'
         ),
         fl50_error_boundary: resolve(__dirname, 'pages/fl-50/index.html'),
+        fl51_supabase_baseline: resolve(
+          __dirname,
+          'pages/fl-51/baseline/index.html'
+        ),
       },
     },
   },

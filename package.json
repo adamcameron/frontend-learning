@@ -15,6 +15,7 @@
     "test:ui": "vitest --ui --coverage --api.host 0.0.0.0"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.83.0",
     "@tanstack/eslint-plugin-query": "^5.91.2",
     "@tanstack/react-query": "^5.90.9",
     "@tanstack/react-query-devtools": "^5.90.2",
@@ -43,6 +44,7 @@
     "jsdom": "^27.0.0",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
+    "supabase": "^2.58.5",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.1",
     "vite": "^7.1.10",

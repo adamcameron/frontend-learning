@@ -14,19 +14,12 @@ describe('System-level tests', () => {
     })
   })
   describe('env tests', () => {
-    it.each([
-      'VITE_API_BASE_URL_CLIENT',
-      'VITE_API_BASE_URL_TEST',
-      'VITE_API_BASE_URL',
-    ])('has required env vars: [%s]', (envVarName: string) => {
-      expect(process.env[envVarName]).toBeDefined()
-      expect(process.env[envVarName]?.length).toBeGreaterThan(0)
-    })
-  })
-
-  it('has the correct value for VITE_API_BASE_URL set', () => {
-    expect(process.env.VITE_API_BASE_URL).toEqual(
-      process.env.VITE_API_BASE_URL_TEST
+    it.each(['VITE_SUPABASE_URL', 'VITE_SUPABASE_PUBLISHABLE_KEY'])(
+      'has required env vars: [%s]',
+      (envVarName: string) => {
+        expect(process.env[envVarName]).toBeDefined()
+        expect(process.env[envVarName]?.length).toBeGreaterThan(0)
+      }
     )
   })
 })

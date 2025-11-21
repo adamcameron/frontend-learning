@@ -2,6 +2,8 @@ import { type ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import './gallery.css'
 import { type Mugshot } from '../mugshot.tsx'
+import { supabaseClient } from '../lib/supabase.ts'
+import { StatusCodes } from 'http-status-codes'
 
 function Profile({ src, alt }: { src: string; alt: string }) {
   return (
@@ -45,12 +47,21 @@ function wrapInGallery(children: ReactNode) {
 }
 
 async function fetchProfiles(): Promise<Mugshot[]> {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/profiles`)
-  if (!response.ok) {
-    throw new Error(`Response status: ${response.status}`)
+  const { data, status }: { data: Mugshot[] | null; status: number } =
+    await supabaseClient
+      .from('profiles')
+      .select()
+      .overrideTypes<Array<Mugshot>, { merge: false }>()
+
+  if (status !== Number(StatusCodes.OK)) {
+    throw new Error(`Response status: ${status}`)
+  }
+
+  if (data === null) {
+    throw new Error('Unexpected logic exception')
   }
 
   // out of scope: proper validation that it's returning a Mugshot[]
 
-  return response.json() as Promise<Mugshot[]>
+  return data
 }

@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { supabaseClient } from '@/profiles/lib/supabase.ts'
 import Form from '@/profiles/add/Form.tsx'
 
 const mockedUsedNavigate = vi.fn()
@@ -50,12 +51,8 @@ describe('Tests for add-profile form', () => {
   })
 
   describe('Bad response behaviour', () => {
-    it('displays a client error on a 400 response', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-        ok: false,
-        status: StatusCodes.BAD_REQUEST,
-        json: async () => Promise.resolve([]),
-      } as Response)
+    it('displays a client error on a client error response', async () => {
+      mockClientResponse(null, StatusCodes.BAD_REQUEST)
 
       fillInAndSubmitForm()
 
@@ -66,12 +63,8 @@ describe('Tests for add-profile form', () => {
       })
     })
 
-    it('displays a server error on a 500 response', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-        ok: false,
-        status: StatusCodes.INTERNAL_SERVER_ERROR,
-        json: async () => Promise.resolve([]),
-      } as Response)
+    it('displays a server error on a server error response', async () => {
+      mockClientResponse(null, StatusCodes.INTERNAL_SERVER_ERROR)
 
       fillInAndSubmitForm()
 
@@ -83,9 +76,7 @@ describe('Tests for add-profile form', () => {
     })
 
     it('displays an unreachable server error on server unreachable', async () => {
-      vi.spyOn(globalThis, 'fetch').mockImplementation(() => {
-        return Promise.reject(new Error('MOCKED_FETCH_ERROR'))
-      })
+      mockSupabaseClientError()
 
       fillInAndSubmitForm()
 
@@ -99,11 +90,7 @@ describe('Tests for add-profile form', () => {
 
   describe('OK response tests', () => {
     it('redirects to the gallery on success', async () => {
-      vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-        ok: true,
-        status: StatusCodes.CREATED,
-        json: async () => Promise.resolve([]),
-      } as Response)
+      mockClientResponse(['NOT_TESTED'], StatusCodes.CREATED)
 
       fillInAndSubmitForm()
 
@@ -113,15 +100,14 @@ describe('Tests for add-profile form', () => {
     })
 
     it('disables submit whilst processing the submission', async () => {
-      vi.spyOn(globalThis, 'fetch').mockImplementation(
-        () => new Promise(() => {}) // Never resolves - stays pending forever
-      )
+      mockClientResponse(['NOT_TESTED'], StatusCodes.CREATED, 20)
 
       renderFormWithAllProviders()
       const inputs: HTMLInputElement[] = screen.getAllByTestId(/^input-.*$/)
-
-      fireEvent.change(inputs[0], { target: { value: 'valid src' } })
-      fireEvent.change(inputs[1], { target: { value: 'valid alt' } })
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'valid src' } })
+        fireEvent.change(inputs[1], { target: { value: 'valid alt' } })
+      })
 
       await waitFor(() => {
         const submit: HTMLButtonElement = screen.getByTestId('submitButton')
@@ -165,3 +151,29 @@ describe('Tests for add-profile form', () => {
     })
   }
 })
+
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-argument */
+function mockClientResponse(data: unknown, status: number | null, delayMs = 0) {
+  vi.spyOn(supabaseClient, 'from').mockReturnValue({
+    insert: vi.fn().mockReturnValue({
+      select: vi.fn().mockImplementation(() => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ data, status })
+          }, delayMs)
+        })
+      }),
+    }),
+  } as any)
+}
+
+function mockSupabaseClientError() {
+  vi.spyOn(supabaseClient, 'from').mockReturnValue({
+    insert: vi.fn().mockReturnValue({
+      select: vi.fn().mockImplementation(() => {
+        throw new Error('TEST: Forced exception from Supabase client')
+      }),
+    }),
+  } as any)
+}
+/* eslint-enable */
