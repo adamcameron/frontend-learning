@@ -21,15 +21,19 @@ export default function Gallery() {
   const isAuthenticated = useQuery<boolean>({
     queryKey: ['AUTHENTICATED_USER'],
     queryFn: checkAuthentication,
-  }).data
+  })
 
   const mugshots = useQuery<Mugshot[]>({
     queryKey: ['ALL_PROFILES'],
     queryFn: fetchProfiles,
-    enabled: isAuthenticated,
+    enabled: isAuthenticated.data === true,
   })
 
-  if (!isAuthenticated) {
+  if (isAuthenticated.isPending === true) {
+    return <span data-testid="gallery-status">Authenticating...</span>
+  }
+
+  if (isAuthenticated.data !== true) {
     return <span data-testid="gallery-error">Ain't logged-in, pal</span>
   }
 
