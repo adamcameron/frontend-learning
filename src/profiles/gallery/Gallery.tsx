@@ -18,24 +18,39 @@ function Profile({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function Gallery() {
-  const { isPending, isError, data, error } = useQuery<Mugshot[]>({
-    queryKey: ['ALL_PROFILES'],
-    queryFn: fetchProfiles,
+  const isAuthenticated = useQuery<boolean>({
+    queryKey: ['AUTHENTICATED_USER'],
+    queryFn: checkAuthentication,
   })
 
-  if (isPending) {
+  const mugshots = useQuery<Mugshot[]>({
+    queryKey: ['ALL_PROFILES'],
+    queryFn: fetchProfiles,
+    enabled: isAuthenticated.data === true,
+  })
+
+  if (isAuthenticated.isPending === true) {
+    return <span data-testid="gallery-status">Authenticating...</span>
+  }
+
+  if (isAuthenticated.data !== true) {
+    return <span data-testid="gallery-error">Ain't logged-in, pal</span>
+  }
+
+  if (mugshots.isPending) {
     return wrapInGallery('Loading...')
   }
-  if (isError) {
+
+  if (mugshots.isError) {
     return wrapInGallery(
-      <span data-testid="gallery-error">Error: {error.message}</span>
+      <span data-testid="gallery-error">Error: {mugshots.error.message}</span>
     )
   }
 
   return wrapInGallery(
     <>
       <h1>Amazing scientists</h1>
-      {data.map((mugshot: Mugshot) => (
+      {mugshots.data.map((mugshot: Mugshot) => (
         <Profile {...mugshot} key={mugshot.id} />
       ))}
     </>
@@ -64,4 +79,9 @@ async function fetchProfiles(): Promise<Mugshot[]> {
   // out of scope: proper validation that it's returning a Mugshot[]
 
   return data
+}
+
+async function checkAuthentication(): Promise<boolean> {
+  const userAuthStatus = await supabaseClient.auth.getUser()
+  return userAuthStatus.error === null
 }

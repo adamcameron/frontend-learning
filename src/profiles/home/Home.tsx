@@ -1,3 +1,8 @@
 export default function Home() {
-  return <>Nothing to see here. Move along.</>
+  return (
+    <>
+      <h1>Home</h1>
+      <p>Nothing to see here. Move along.</p>
+    </>
+  )
 }
