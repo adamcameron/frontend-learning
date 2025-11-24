@@ -44,6 +44,7 @@ export default function LoginForm() {
       Email:
       <input
         name="email"
+        type="email"
         value={user.email}
         placeholder="your.name@example.com"
         onChange={handleChange}
@@ -54,6 +55,7 @@ export default function LoginForm() {
       Password:
       <input
         name="password"
+        type="password"
         value={user.password}
         onChange={handleChange}
         required={true}
