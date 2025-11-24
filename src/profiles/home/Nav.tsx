@@ -8,6 +8,9 @@ export default function Nav() {
           <Link to="/">Home</Link>
         </li>
         <li>
+          <Link to="/profiles/login/">Login</Link>
+        </li>
+        <li>
           <Link to="/profiles/gallery/">Gallery</Link>
         </li>
         <li>
