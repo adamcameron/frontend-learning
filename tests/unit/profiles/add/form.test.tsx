@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { supabaseClient } from '@/profiles/lib/supabase.ts'
+import { supabaseClient } from '@/lib/supabase'
 import Form from '@/profiles/add/Form.tsx'
 
 const mockedUsedNavigate = vi.fn()

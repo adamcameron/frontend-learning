@@ -2,7 +2,7 @@ import { type ReactNode } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import './gallery.css'
 import { type Mugshot } from '../mugshot.tsx'
-import { supabaseClient } from '../lib/supabase.ts'
+import { supabaseClient } from '../../lib/supabase.ts'
 import { StatusCodes } from 'http-status-codes'
 
 function Profile({ src, alt }: { src: string; alt: string }) {

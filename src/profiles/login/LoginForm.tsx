@@ -1,8 +1,8 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
-import { supabaseClient } from '../lib/supabase.ts'
-import { loginCredentials } from '../lib/testCredentials.ts'
+import { supabaseClient } from '../../lib/supabase.ts'
+import { loginCredentials } from '../../lib/testCredentials.ts'
 
 type User = { email: string; password: string }
 export default function LoginForm() {

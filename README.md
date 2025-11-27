@@ -98,3 +98,10 @@ VALUES
 ```
 
 This lot can be added via the Supabase admin, or straight into the `public` schema of the `postgres` DB.
+
+Login for the admin app is just the defaults:
+
+```
+DASHBOARD_USERNAME=supabase
+DASHBOARD_PASSWORD=this_password_is_insecure_and_should_be_updated
+```
