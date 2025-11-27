@@ -72,7 +72,7 @@ export default function ImageManager() {
         ? 'nothing'
         : imageUrls.data.map((imageUrl: string) => (
             <>
-              <img src={imageUrl} key={imageUrl} width="200px" />
+              <img src={imageUrl} key={imageUrl} alt={getFilenameFromUrl(imageUrl) || 'Uploaded image'} width="200px" />
               <br />
               {getFilenameFromUrl(imageUrl)}
               <hr />
