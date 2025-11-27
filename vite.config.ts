@@ -34,6 +34,7 @@ export default defineConfig({
           __dirname,
           'pages/fl-51/baseline/index.html'
         ),
+        fl53_image_manager: resolve(__dirname, 'pages/fl-53/index.html'),
       },
     },
   },

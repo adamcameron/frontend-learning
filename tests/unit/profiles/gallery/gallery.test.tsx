@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { StatusCodes } from 'http-status-codes'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { supabaseClient } from '@/profiles/lib/supabase.ts'
+import { supabaseClient } from '@/lib/supabase'
 import { type UserResponse } from '@supabase/supabase-js'
 import Gallery from '@/profiles/gallery/Gallery.tsx'
 

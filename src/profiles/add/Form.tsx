@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type Mugshot, type UnsavedMugshot } from '../mugshot.tsx'
-import { supabaseClient } from '../lib/supabase.ts'
+import { supabaseClient } from '../../lib/supabase.ts'
 
 import './styles.css'
 

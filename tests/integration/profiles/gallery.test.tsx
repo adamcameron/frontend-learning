@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { supabaseClient } from '@/profiles/lib/supabase.ts'
-import { loginCredentials } from '@/profiles/lib/testCredentials'
+import { supabaseClient } from '@/lib/supabase'
+import { loginCredentials } from '@/lib/testCredentials'
 import Gallery from '@/profiles/gallery/Gallery.tsx'
 
 describe('Testing Gallery component with live data', () => {
