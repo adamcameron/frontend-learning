@@ -22,7 +22,6 @@ export default function ImageManager() {
     onSuccess: () => {
       console.log('All files deleted successfully')
       void queryClient.invalidateQueries({ queryKey: ['ALL_IMAGES'] })
-      void imageUrls.refetch()
     },
     onError: (error) => {
       console.error('Error deleting files:', error)
