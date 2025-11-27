@@ -120,10 +120,13 @@ async function fetchImageUrls(): Promise<string[]> {
 }
 
 async function deleteImages() {
-  const { data: files } = await supabaseClient.storage
+  const { data: files, error: listError } = await supabaseClient.storage
     .from('images')
     .list('private/')
-  const paths = files!.map((file) => `private/${file.name}`)
+  if (listError !== null || files === null) {
+    return Promise.reject(listError || new Error('Failed to list files'))
+  }
+  const paths = files.map((file) => `private/${file.name}`)
 
   const { data, error } = await supabaseClient.storage
     .from('images')
