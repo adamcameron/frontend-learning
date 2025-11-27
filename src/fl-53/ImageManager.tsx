@@ -1,4 +1,4 @@
-import React, { type FormEvent, useState } from 'react'
+import React, { type FormEvent, useState, Fragment } from 'react'
 import { supabaseClient } from '../lib/supabase.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -11,7 +11,6 @@ export default function ImageManager() {
     onSuccess: () => {
       console.log('File uploaded successfully')
       void queryClient.invalidateQueries({ queryKey: ['ALL_IMAGES'] })
-      void imageUrls.refetch()
     },
     onError: (error) => {
       console.error('Error uploading file:', error)
@@ -71,12 +70,16 @@ export default function ImageManager() {
       {imageUrls.data === undefined
         ? 'nothing'
         : imageUrls.data.map((imageUrl: string) => (
-            <>
-              <img src={imageUrl} key={imageUrl} alt={getFilenameFromUrl(imageUrl) || 'Uploaded image'} width="200px" />
+            <Fragment key={imageUrl}>
+              <img
+                src={imageUrl}
+                alt={getFilenameFromUrl(imageUrl) || 'Uploaded image'}
+                width="200px"
+              />
               <br />
               {getFilenameFromUrl(imageUrl)}
               <hr />
-            </>
+            </Fragment>
           ))}
     </div>
   )
