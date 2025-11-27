@@ -104,10 +104,13 @@ async function fetchImageUrls(): Promise<string[]> {
   const urls = data
     .filter((file) => file.name.endsWith('.png'))
     .map(async (file) => {
-      const { data } = await supabaseClient.storage
+      const { data, error } = await supabaseClient.storage
         .from('images')
         .createSignedUrl(`private/${file.name}`, 60)
-
+      if (error !== null) {
+        console.error(`Failed to create signed URL for ${file.name}:`, error)
+        throw error
+      }
       return data === null ? '' : data.signedUrl
     })
   return Promise.all(urls)
