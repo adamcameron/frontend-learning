@@ -36,7 +36,7 @@ export default function ImageManager() {
   })
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFile(event.target.files![0] || null)
+    setSelectedFile(event.target.files?.[0] || null)
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
